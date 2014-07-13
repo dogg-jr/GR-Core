@@ -1,0 +1,206 @@
+/*
+Copyright (C) 2007 <SWGEmu>
+
+This File is part of Core3.
+
+This program is free software; you can redistribute
+it and/or modify it under the terms of the GNU Lesser
+General Public License as published by the Free Software
+Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Lesser General Public License for
+more details.
+
+You should have received a copy of the GNU Lesser General
+Public License along with this program; if not, write to
+the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+
+Linking Engine3 statically or dynamically with other modules
+is making a combined work based on Engine3.
+Thus, the terms and conditions of the GNU Lesser General Public License
+cover the whole combination.
+
+In addition, as a special exception, the copyright holders of Engine3
+give you permission to combine Engine3 program with free software
+programs or libraries that are released under the GNU LGPL and with
+code included in the standard release of Core3 under the GNU LGPL
+license (or modified versions of such code, with unchanged license).
+You may copy and distribute such a system following the terms of the
+GNU LGPL for Engine3 and the licenses of the other code concerned,
+provided that you include the source code of that other code when
+and as the GNU LGPL requires distribution of source code.
+
+Note that people who make modified versions of Engine3 are not obligated
+to grant this special exception for their modified versions;
+it is their choice whether to do so. The GNU Lesser General Public License
+gives permission to release a modified version without this exception;
+this exception also makes it possible to release a modified version
+which carries forward this exception.
+*/
+
+package server.zone.managers.loot;
+
+import system.util.VectorMap;
+import system.util.SortedVector;
+import engine.core.ManagedService;
+import server.zone.objects.scene.SceneObject;
+import server.zone.objects.creature.CreatureObject;
+import server.zone.objects.creature.AiAgent;
+import server.zone.managers.crafting.CraftingManager;
+import server.zone.managers.object.ObjectManager;
+import engine.lua.Lua;
+import engine.lua.LuaObject;
+import server.zone.ZoneServer;
+import server.zone.objects.tangible.TangibleObject;
+include server.zone.managers.loot.LootGroupMap;
+include server.zone.managers.loot.lootgroup.LootGroupCollection;
+include server.zone.templates.LootItemTemplate;
+include server.zone.objects.manufactureschematic.craftingvalues.CraftingValues;
+include server.zone.objects.tangible.weapon.WeaponObject;
+
+class LootManager extends ManagedService implements Logger {
+	private transient CraftingManager craftingManager;
+	private transient Lua lua;
+	private transient ZoneServer zoneServer;
+	private transient ObjectManager objectManager;
+	
+	private transient LootGroupMap lootGroupMap;
+	
+	private transient float yellowChance;
+	private transient float yellowModifier;
+
+	private transient float exceptionalChance;
+	private transient float exceptionalModifier;
+	
+	private transient float legendaryChance;
+	private transient float legendaryModifier;
+
+	private transient float skillModChance;
+	
+	private transient float junkValueModifier;
+
+	@dereferenced
+	private transient SortedVector<int> randomDotAttribute;
+	@dereferenced
+	private transient SortedVector<int> randomDotStrength;
+	@dereferenced
+	private transient SortedVector<int> randomDotDuration;
+	@dereferenced
+	private transient SortedVector<int> randomDotPotency;
+	@dereferenced
+	private transient SortedVector<int> randomDotUses;
+
+	@dereferenced
+	private transient SortedVector<string> lootableArmorAttachmentMods;
+	@dereferenced
+	private transient SortedVector<string> lootableClothingAttachmentMods;	
+	@dereferenced
+	private transient SortedVector<string> lootableArmorMods;
+	@dereferenced
+	private transient SortedVector<string> lootableClothingMods;
+	@dereferenced
+	private transient SortedVector<string> lootableOneHandedMeleeMods;
+	@dereferenced
+	private transient SortedVector<string> lootableTwoHandedMeleeMods;
+	@dereferenced
+	private transient SortedVector<string> lootableUnarmedMods;
+	@dereferenced
+	private transient SortedVector<string> lootablePistolMods;
+	@dereferenced
+	private transient SortedVector<string> lootableRifleMods;
+	@dereferenced
+	private transient SortedVector<string> lootableCarbineMods;
+	@dereferenced
+	private transient SortedVector<string> lootablePolearmMods;
+	@dereferenced
+	private transient SortedVector<string> lootableHeavyWeaponMods;
+
+	public LootManager(CraftingManager craftman, ObjectManager objMan, ZoneServer server) {
+		craftingManager = craftman;
+		objectManager = objMan;
+		zoneServer = server;
+		
+		lootGroupMap = null;
+		
+		lootableArmorAttachmentMods.setNoDuplicateInsertPlan();
+		lootableClothingAttachmentMods.setNoDuplicateInsertPlan();
+		lootableArmorMods.setNoDuplicateInsertPlan();
+		lootableClothingMods.setNoDuplicateInsertPlan();
+		lootableOneHandedMeleeMods.setNoDuplicateInsertPlan();
+		lootableTwoHandedMeleeMods.setNoDuplicateInsertPlan();
+		lootableUnarmedMods.setNoDuplicateInsertPlan();
+		lootablePistolMods.setNoDuplicateInsertPlan();
+		lootableRifleMods.setNoDuplicateInsertPlan();
+		lootableCarbineMods.setNoDuplicateInsertPlan();
+		lootablePolearmMods.setNoDuplicateInsertPlan();
+		lootableHeavyWeaponMods.setNoDuplicateInsertPlan();
+		
+		exceptionalChance = 0.0;
+		exceptionalModifier = 0.0;
+		
+		legendaryChance = 0.0;
+		legendaryModifier = 0.0;
+
+		skillModChance = 0.0;
+
+		Logger.setLoggingName("LootManager");
+		
+		Logger.setLogging(true);
+		Logger.setGlobalLogging(true);
+	}
+	
+	public native void initialize();
+	
+	private native boolean loadConfigFile();
+	private native boolean loadConfigData();
+	private native void loadDefaultConfig();
+	
+	@local
+	private native void setInitialObjectStats(LootItemTemplate templateObject, CraftingValues craftingValues, TangibleObject prototype);
+	
+	@local
+	private native void setSkillMods(TangibleObject object, LootItemTemplate templateObject, int level, float excMod);
+	
+	@local
+	private native void setCustomObjectName(TangibleObject object, LootItemTemplate templateObject);
+	
+	@local
+	private native void setSockets(TangibleObject object, CraftingValues craftingValues);
+
+	@local
+	private native void addRandomDots(TangibleObject object, LootItemTemplate templateObject, int level, float excMod);
+
+	@local
+	private native void addStaticDots(TangibleObject object, LootItemTemplate templateObject, int level);
+
+	@local
+	private native float calculateDotValue(float min, float max, float level);
+
+	@local
+	private native void addConditionDamage(TangibleObject loot, CraftingValues craftingValues);
+	
+	@local
+	private native void loadLootableMods( LuaObject modTable, SortedVector<string> mods );
+	
+	@local
+	public native TangibleObject createLootObject(LootItemTemplate templateObject, int level, boolean maxCondition = false);
+	
+	@local
+	public native string getRandomLootableMod( unsigned int sceneObjectType );	
+	
+	public native int calculateLootCredits(int level);
+
+	public native boolean createLoot(SceneObject container, AiAgent creature);
+	
+	@local
+	public native boolean createLootFromCollection(SceneObject container, LootGroupCollection collection, int level);
+	
+	public native boolean createLoot(SceneObject container, final string lootGroup, int level = -1, boolean maxCondition = false);
+	
+	//public native void generateStats(final string lootTemplate, CraftingValues)
+
+}
