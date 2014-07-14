@@ -454,6 +454,16 @@ object_tangible_wearables_backpack_shared_backpack_s06_quest = SharedTangibleObj
 
 ObjectTemplates:addClientTemplate(object_tangible_wearables_backpack_shared_backpack_s06_quest, "object/tangible/wearables/backpack/shared_backpack_s06_quest.iff")
 
+--****************************************************************************************************************************************************************************
+object_tangible_wearables_backpack_shared_ep3_chiss_poacher_backpack = SharedTangibleObjectTemplate:new {
+	clientTemplateFileName = "object/tangible/wearables/backpack/shared_ep3_chiss_poacher_backpack.iff"
+
+}
+
+ObjectTemplates:addClientTemplate(object_tangible_wearables_backpack_shared_ep3_chiss_poacher_backpack, "object/tangible/wearables/backpack/shared_ep3_chiss_poacher_backpack.iff")
+
+
+--****************************************************************************************************************************************************************************
 object_tangible_wearables_backpack_shared_singing_mountain_clan_backpack = SharedTangibleObjectTemplate:new {
 	clientTemplateFileName = "object/tangible/wearables/backpack/shared_singing_mountain_clan_backpack.iff"
 	--Data below here is deprecated and loaded from the tres, keeping for easy lookups

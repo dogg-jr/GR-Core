@@ -65,7 +65,7 @@ CityVotingCyclesUntilLocked = 2
 CityUpdateInterval = 2880
 
 --The amount of time in minutes a new city has to gain enough citizens to remain a city.
-NewCityGracePeriod = 1440
+NewCityGracePeriod = 144000
 
 --The amount of time in minutes an old city has to regain enough citizens to remain a city.
 OldCityGracePeriod = 30240
@@ -74,7 +74,7 @@ OldCityGracePeriod = 30240
 EnableCityWarn = false
 
 --The number of citizens required to achieve each city rank. (Outpost, Village, Township, City, Metropolis)
-CitizensPerRank = {1, 2, 3, 5, 8}
+CitizensPerRank = {1, 1, 1, 1, 1}
 --CitizensPerRank = {10, 20, 35, 55, 85}
 
 --The radius in meters of the city at each city rank. (Outpost, Village, Township, City, Metropolis)
@@ -96,14 +96,14 @@ maintenanceDiscount = 1.0
 CitiesAllowed = {
 	{"corellia", {20, 20, 15, 10, 10}},
 	{"dantooine", {50, 50, 30, 20, 20}},
-	{"dathomir", {0, 0, 0, 0, 0}},
-	{"endor", {0, 0, 0, 0, 0}},
+	{"dathomir", {10, 10, 10, 10, 10}},
+	{"endor", {10, 10, 10, 10, 10}},
 	{"lok", {50, 50, 30, 20, 20}},
 	{"naboo", {20, 20, 15, 10, 10}},
 	{"rori", {50, 50, 30, 20, 20}},
 	{"talus", {50, 50, 30, 20, 20}},
 	{"tatooine", {20, 20, 15, 10, 10}},
-	{"yavin4", {0, 0, 0, 0, 0}}
+	{"yavin4", {10, 10, 10, 10, 10}}
 }
 
 

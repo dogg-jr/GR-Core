@@ -44,7 +44,7 @@
 object_tangible_food_crafted_dish_synthsteak = object_tangible_food_crafted_shared_dish_synthsteak:new {
 	templateType = CONSUMABLE,
 
-	duration = 22,
+	duration = 220,
 	filling = 10,
 	nutrition = 10,
 
@@ -57,10 +57,10 @@ object_tangible_food_crafted_dish_synthsteak = object_tangible_food_crafted_shar
 	flavorMax = 50,
 	nutritionMin = 17,
 	nutritionMax = 31,
-	quantityMin = 4,
-	quantityMax = 7,-- 8 on http://swgemu.wikia.com/wiki/Category:Chef
+	quantityMin = 10,
+	quantityMax = 10,-- 8 on http://swgemu.wikia.com/wiki/Category:Chef
 
-	modifiers = { "mitigate_damage", 0 },
+	modifiers = { "mitigate_damage", 20 },
 
 	buffName = "food.mitigate_damage",
 	buffCRC = 0,

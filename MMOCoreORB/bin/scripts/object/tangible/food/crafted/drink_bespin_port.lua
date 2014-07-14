@@ -44,7 +44,7 @@
 object_tangible_food_crafted_drink_bespin_port = object_tangible_food_crafted_shared_drink_bespin_port:new {
 	templateType = CONSUMABLE,
 
-	duration = 1,
+	duration = 200,
 	filling = 10,
 	nutrition = 10,
 
@@ -57,10 +57,10 @@ object_tangible_food_crafted_drink_bespin_port = object_tangible_food_crafted_sh
 	flavorMax = 1,
 	nutritionMin = 3,
 	nutritionMax = 12,
-	quantityMin = 5,
-	quantityMax = 8,
+	quantityMin = 10,
+	quantityMax = 10,
 
-	modifiers = { "experiment_bonus", 0 },
+	modifiers = { "experiment_bonus", 20 },
 
 	buffName = "food.experiment_bonus",
 	buffCRC = 0x9B38A4CB,

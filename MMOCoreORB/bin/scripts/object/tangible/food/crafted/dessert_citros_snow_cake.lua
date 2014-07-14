@@ -44,7 +44,7 @@
 object_tangible_food_crafted_dessert_citros_snow_cake = object_tangible_food_crafted_shared_dessert_citros_snow_cake:new {
 	templateType = CONSUMABLE,
 
-	duration = 45,
+	duration = 200,
 	filling = 10,
 	nutrition = 10,
 
@@ -56,10 +56,10 @@ object_tangible_food_crafted_dessert_citros_snow_cake = object_tangible_food_cra
 	flavorMax = 1920,
 	nutritionMin = 14,
 	nutritionMax = 24,
-	quantityMin = 5,
-	quantityMax = 7,
+	quantityMin = 10,
+	quantityMax = 10,
 
-	modifiers = { "attack_accuracy", 0 },
+	modifiers = { "attack_accuracy", 20 },
 
 	buffName = "food.attack_accuracy",
 	buffCRC = 0,

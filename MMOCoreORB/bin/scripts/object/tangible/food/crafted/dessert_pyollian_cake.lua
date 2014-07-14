@@ -44,7 +44,7 @@
 object_tangible_food_crafted_dessert_pyollian_cake = object_tangible_food_crafted_shared_dessert_pyollian_cake:new {
 	templateType = CONSUMABLE,
 
-	duration = 1,
+	duration = 200,
 	filling = 10,
 	nutrition = 10,
 
@@ -57,10 +57,10 @@ object_tangible_food_crafted_dessert_pyollian_cake = object_tangible_food_crafte
 	flavorMax = 1,
 	nutritionMin = 5,
 	nutritionMax = 10,
-	quantityMin = 5,
-	quantityMax = 8,
+	quantityMin = 10,
+	quantityMax = 10,
 
-	modifiers = { "craft_bonus", 0 },
+	modifiers = { "craft_bonus", 20 },
 
 	buffName = "food.craft_bonus",
 	buffCRC = 0,

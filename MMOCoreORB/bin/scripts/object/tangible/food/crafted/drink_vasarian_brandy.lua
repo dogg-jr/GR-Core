@@ -44,7 +44,7 @@
 object_tangible_food_crafted_drink_vasarian_brandy = object_tangible_food_crafted_shared_drink_vasarian_brandy:new {
 	templateType = CONSUMABLE,
 
-	duration = 10,
+	duration = 220,
 	filling = 10,
 	nutrition = 10,
 
@@ -56,10 +56,10 @@ object_tangible_food_crafted_drink_vasarian_brandy = object_tangible_food_crafte
 	flavorMax = 3600,
 	nutritionMin = 150,
 	nutritionMax = 240,
-	quantityMin = 6,
+	quantityMin = 10,
 	quantityMax = 10,
 
-	modifiers = { "mind", 0 , "focus", 0 , "willpower", 0 },
+	modifiers = { "mind", 20 , "focus", 20 , "willpower", 20 },
 
 	buffName = "food.drink_vasarian_brandy",
 	buffCRC = 0,

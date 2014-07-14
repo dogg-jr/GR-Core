@@ -45,7 +45,7 @@ object_tangible_food_crafted_dish_exo_protein_wafers = object_tangible_food_craf
 
 	templateType = CONSUMABLE,
 
-	duration = 10,
+	duration = 200,
 	filling = 10,
 	nutrition = 10,
 
@@ -58,10 +58,10 @@ object_tangible_food_crafted_dish_exo_protein_wafers = object_tangible_food_craf
 	flavorMax = 25,
 	nutritionMin = 10,
 	nutritionMax = 18,
-	quantityMin = 6,
+	quantityMin = 10,
 	quantityMax = 10,
 
-	modifiers = { "mitigate_damage", 0 },
+	modifiers = { "mitigate_damage", 20 },
 
 	buffName = "food.mitigate_damage",
 	buffCRC = 0,

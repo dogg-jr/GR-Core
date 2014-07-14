@@ -43,9 +43,11 @@
 
 
 --Children folder includes
+includeFile("tangible/wearables/armor/assault_trooper/serverobjects.lua")
 includeFile("tangible/wearables/armor/bone/serverobjects.lua")
 includeFile("tangible/wearables/armor/bounty_hunter/serverobjects.lua")
 includeFile("tangible/wearables/armor/chitin/serverobjects.lua")
+includeFile("tangible/wearables/armor/clone_trooper/serverobjects.lua")
 includeFile("tangible/wearables/armor/composite/serverobjects.lua")
 includeFile("tangible/wearables/armor/ithorian_defender/serverobjects.lua")
 includeFile("tangible/wearables/armor/ithorian_guardian/serverobjects.lua")
@@ -59,6 +61,7 @@ includeFile("tangible/wearables/armor/marine/serverobjects.lua")
 includeFile("tangible/wearables/armor/nightsister/serverobjects.lua")
 includeFile("tangible/wearables/armor/padded/serverobjects.lua")
 includeFile("tangible/wearables/armor/ris/serverobjects.lua")
+includeFile("tangible/wearables/armor/scout_trooper/serverobjects.lua")
 includeFile("tangible/wearables/armor/singing_mountain_clan/serverobjects.lua")
 includeFile("tangible/wearables/armor/stormtrooper/serverobjects.lua")
 includeFile("tangible/wearables/armor/tantel/serverobjects.lua")

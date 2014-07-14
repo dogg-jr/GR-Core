@@ -40,6 +40,13 @@
 --this exception also makes it possible to release a modified version
 --which carries forward this exception.
 
+object_mobile_vehicle_shared_barc_speeder = SharedCreatureObjectTemplate:new {
+	clientTemplateFileName = "object/mobile/vehicle/shared_barc_speeder.iff"
+
+}
+
+ObjectTemplates:addClientTemplate(object_mobile_vehicle_shared_barc_speeder, "object/mobile/vehicle/shared_barc_speeder.iff")
+
 
 object_mobile_vehicle_shared_jetpack = SharedCreatureObjectTemplate:new {
 	clientTemplateFileName = "object/mobile/vehicle/shared_jetpack.iff"
