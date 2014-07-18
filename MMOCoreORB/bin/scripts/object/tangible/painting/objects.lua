@@ -1457,6 +1457,18 @@ object_tangible_painting_shared_painting_cargoport = SharedTangibleObjectTemplat
 
 ObjectTemplates:addClientTemplate(object_tangible_painting_shared_painting_cargoport, "object/tangible/painting/shared_painting_cargoport.iff")
 
+--******************************************************************************************
+
+object_tangible_painting_shared_painting_clone_trooper_01 = SharedTangibleObjectTemplate:new {
+	clientTemplateFileName = "object/tangible/painting/shared_painting_clone_trooper_01.iff"
+
+}
+
+ObjectTemplates:addClientTemplate(object_tangible_painting_shared_painting_clone_trooper_01, "object/tangible/painting/shared_painting_clone_trooper_01.iff")
+
+
+
+
 object_tangible_painting_shared_painting_dance_party = SharedTangibleObjectTemplate:new {
 	clientTemplateFileName = "object/tangible/painting/shared_painting_dance_party.iff"
 	--Data below here is deprecated and loaded from the tres, keeping for easy lookups
@@ -1928,6 +1940,22 @@ object_tangible_painting_shared_painting_freedom = SharedTangibleObjectTemplate:
 }
 
 ObjectTemplates:addClientTemplate(object_tangible_painting_shared_painting_freedom, "object/tangible/painting/shared_painting_freedom.iff")
+
+
+--*************************************************************************
+
+
+object_tangible_painting_shared_painting_grievous_01 = SharedTangibleObjectTemplate:new {
+	clientTemplateFileName = "object/tangible/painting/shared_painting_grievous_01.iff"
+}
+
+ObjectTemplates:addClientTemplate(object_tangible_painting_shared_painting_grievous_01, "object/tangible/painting/shared_painting_grievous_01.iff")
+
+
+
+
+
+
 
 object_tangible_painting_shared_painting_han_wanted = SharedTangibleObjectTemplate:new {
 	clientTemplateFileName = "object/tangible/painting/shared_painting_han_wanted.iff"
