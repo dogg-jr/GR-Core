@@ -60,8 +60,8 @@ bool CombatManager::startCombat(CreatureObject* attacker, TangibleObject* defend
 
 	if (attacker->isPlayerCreature() && attacker->getPlayerObject()->isAFK())
 		return false;
-	// this is redundant (happens again in set/addDefender)
-	//attacker->clearState(CreatureState::PEACE);
+
+	attacker->clearState(CreatureState::PEACE);
 
 	Locker clocker(defender, attacker);
 
@@ -1439,16 +1439,12 @@ int CombatManager::applyDamage(CreatureObject* attacker, WeaponObject* weapon, C
 	}
 
 	String xpType;
-	switch (data.getAttackType()) {
-	case CombatManager::FORCEATTACK:
+	if (data.getAttackType() == CombatManager::FORCEATTACK)
 		xpType = "jedi_general";
-		break;
-	default:
+	else if (attacker->isPet())
+		xpType = "creaturehandler";
+	else
 		xpType = weapon->getXpType();
-		break;
-	}
-
-
 
 	if (poolsToDamage & HEALTH) {
 		healthDamage = getArmorReduction(attacker, weapon, defender, damage, HEALTH, data) * damageMultiplier * data.getHealthDamageMultiplier();
@@ -1503,14 +1499,12 @@ int CombatManager::applyDamage(CreatureObject* attacker, WeaponObject* weapon, T
 		damage *= damageMultiplier;
 
 	String xpType;
-	switch (data.getAttackType()) {
-	case CombatManager::FORCEATTACK:
+	if (data.getAttackType() == CombatManager::FORCEATTACK)
 		xpType = "jedi_general";
-		break;
-	default:
+	else if (attacker->isPet())
+		xpType = "creaturehandler";
+	else
 		xpType = weapon->getXpType();
-		break;
-	}
 
 	if(defender->isTurret()){
 		int armorReduction = getArmorTurretReduction(attacker, defender, weapon);
@@ -1546,6 +1540,7 @@ void CombatManager::broadcastCombatSpam(CreatureObject* attacker, TangibleObject
 		closeObjects.removeAll(vec->size(), 10);
 		vec->safeCopyTo(closeObjects);
 	} else {
+		attacker->info("Null closeobjects vector in CombatManager::broadcastCombatSpam", true);
 		zone->getInRangeObjects(attacker->getWorldPositionX(), attacker->getWorldPositionY(), 128, &closeObjects, true);
 	}
 
@@ -1982,6 +1977,7 @@ int CombatManager::doAreaCombatAction(CreatureObject* attacker, WeaponObject* we
 			closeObjects.removeAll(vec->size(), 10);
 			vec->safeCopyTo(closeObjects);
 		} else {
+			attacker->info("Null closeobjects vector in CombatManager::doAreaCombatAction", true);
 			zone->getInRangeObjects(attacker->getWorldPositionX(), attacker->getWorldPositionY(), 128, &closeObjects, true);
 		}
 
@@ -2091,6 +2087,7 @@ int CombatManager::doAreaCombatAction(TangibleObject* attacker, WeaponObject* we
 			closeObjects.removeAll(vec->size(), 10);
 			vec->safeCopyTo(closeObjects);
 		} else {
+			attacker->info("Null closeobjects vector in CombatManager::doAreaCombatAction", true);
 			zone->getInRangeObjects(attacker->getWorldPositionX(), attacker->getWorldPositionY(), 128, &closeObjects, true);
 		}
 
@@ -2298,6 +2295,7 @@ void CombatManager::broadcastCombatSpam(TangibleObject* attacker, TangibleObject
 		closeObjects.removeAll(vec->size(), 10);
 		vec->safeCopyTo(closeObjects);
 	} else {
+		attacker->info("Null closeobjects vector in CombatManager::broadcastCombatSpam", true);
 		zone->getInRangeObjects(attacker->getWorldPositionX(), attacker->getWorldPositionY(), 128, &closeObjects, true);
 	}
 

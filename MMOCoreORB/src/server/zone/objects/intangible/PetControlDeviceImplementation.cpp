@@ -288,8 +288,8 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 		pet->setFollowObject(player);
 	}
 
-	pet->setupBehaviorTree();
-	pet->activateMovementEvent();
+	pet->setCreatureBitmask(CreatureFlag::PET);
+	pet->activateLoad("");
 
 	// Not training any commands
 	trainingCommand = 0;

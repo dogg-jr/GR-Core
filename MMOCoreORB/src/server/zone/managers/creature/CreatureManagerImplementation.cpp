@@ -282,27 +282,17 @@ CreatureObject* CreatureManagerImplementation::spawnCreatureWithLevel(unsigned i
 	return creature;
 }
 
-CreatureObject* CreatureManagerImplementation::spawnCreatureWithAi(uint32 templateCRC, float x, float z, float y, SceneObject* cell, bool persistent) {
-/*	ManagedReference<SceneObject*> object = zoneServer->createObject(String("object/creature/ai/ai_actor.iff").hashCode(), persistent);
-	if (object == NULL || !object->isActorObject()) {
-		error("could not spawn actor");
-		return NULL;
+CreatureObject* CreatureManagerImplementation::spawnCreatureWithAi(uint32 templateCRC, float x, float z, float y, uint64 parentID, bool persistent) {
+	CreatureObject* creature = spawnCreature(templateCRC, 0, x, z, y, parentID, persistent);
+
+	if (creature != NULL && creature->isAiAgent())
+		cast<AiAgent*>(creature)->activateLoad("");
+	else {
+		error("could not spawn template " + String::valueOf(templateCRC) + " with AI.");
+		creature = NULL;
 	}
 
-	AiActor* actor = cast<AiActor*>(object.get());
-
-	if (actor == NULL) {
-		error("server did not create actor");
-		return NULL;
-	}
-
-	actor->setHomeLocation(x, z, y, cell);
-	actor->loadTemplateData(creatureTemplateManager->getTemplate(templateCRC));
-
-	CreatureObject* host = actor->getHost();
-
-	return host;*/
-	return NULL;
+	return creature;
 }
 
 String CreatureManagerImplementation::getTemplateToSpawn(uint32 templateCRC) {
@@ -362,6 +352,13 @@ CreatureObject* CreatureManagerImplementation::spawnCreatureAsBaby(uint32 templa
 
 	placeCreature(creo, x, z, y, parentID);
 
+	if (creo != NULL && creo->isAiAgent())
+		cast<AiAgent*>(creo)->activateLoad("");
+	else {
+		error("could not spawn template " + templateToSpawn + " as baby with AI.");
+		creo = NULL;
+	}
+
 	return creo;
 }
 
@@ -420,11 +417,6 @@ CreatureObject* CreatureManagerImplementation::spawnCreature(uint32 templateCRC,
 	}
 
 	placeCreature(creature, x, z, y, parentID);
-
-	if (creature != NULL && creature->isAiAgent()) {
-		AiAgent* npc = cast<AiAgent*>(creature);
-		npc->activateMovementEvent();
-	}
 
 	return creature;
 }
@@ -583,22 +575,25 @@ int CreatureManagerImplementation::notifyDestruction(TangibleObject* destructor,
 
 		if (player != NULL) {
 
-			if(player->isGrouped())
+			if(player->isGrouped()) {
 				ownerID = player->getGroupID();
-			else
+			} else {
 				ownerID = player->getObjectID();
+			}
 
-			Locker locker(player, destructedObject);
+			if (player->isPlayerCreature()) {
+				Locker locker(player, destructedObject);
 
-			player->notifyObservers(ObserverEventType::KILLEDCREATURE, destructedObject);
+				player->notifyObservers(ObserverEventType::KILLEDCREATURE, destructedObject);
 
-			FactionManager* factionManager = FactionManager::instance();
+				FactionManager* factionManager = FactionManager::instance();
 
-			if (!destructedObject->getPvPFaction().isEmpty() && !destructedObject->isEventMob()) {
-				if(!player->isGrouped())
-					factionManager->awardFactionStanding(player, destructedObject->getPvPFaction());
-				else
-					factionManager->awardFactionStanding(copyThreatMap.getHighestDamagePlayer(), destructedObject->getPvPFaction());
+				if (!destructedObject->getPvPFaction().isEmpty() && !destructedObject->isEventMob()) {
+					if(!player->isGrouped())
+						factionManager->awardFactionStanding(player, destructedObject->getPvPFaction());
+					else
+						factionManager->awardFactionStanding(copyThreatMap.getHighestDamagePlayer(), destructedObject->getPvPFaction());
+				}
 			}
 
 		}
@@ -608,14 +603,13 @@ int CreatureManagerImplementation::notifyDestruction(TangibleObject* destructor,
 
 		SceneObject* creatureInventory = destructedObject->getSlottedObject("inventory");
 
-		if (creatureInventory != NULL) {
+		if (creatureInventory != NULL && player != NULL && player->isPlayerCreature()) {
 			LootManager* lootManager = zoneServer->getLootManager();
 
 			if (destructedObject->isNonPlayerCreatureObject() && !destructedObject->isEventMob())
 				destructedObject->setCashCredits(lootManager->calculateLootCredits(destructedObject->getLevel()));
 
-			if (player != NULL)
-				creatureInventory->setContainerOwnerID(ownerID);
+			creatureInventory->setContainerOwnerID(ownerID);
 
 			lootManager->createLoot(creatureInventory, destructedObject);
 		}
@@ -912,9 +906,7 @@ void CreatureManagerImplementation::tame(Creature* creature, CreatureObject* pla
 
 	if (creature->isAiAgent()) {
 		AiAgent* agent = cast<AiAgent*>(creature);
-		agent->clearBehaviorList();
-		agent->setupBehaviorTree(AiMap::instance()->getTemplate("wait"));
-		agent->activateMovementEvent();
+		agent->activateLoad("wait");
 	}
 
 	ManagedReference<TameCreatureTask*> task = new TameCreatureTask(creature, player, mask, force);

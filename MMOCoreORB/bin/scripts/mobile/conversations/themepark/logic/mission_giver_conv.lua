@@ -16,6 +16,16 @@ function createMissionGiverConvoTemplate(templateName, convoHandler)
 
 	mission_giver_convotemplate:addScreen(mission_giver_init);
 
+	mission_giver_failure = ConvoScreen:new {
+		id = "failure",
+		leftDialog = "",
+		stopConversation = "true",
+		options = {
+		}
+	}
+
+	mission_giver_convotemplate:addScreen(mission_giver_failure);
+
 	mission_giver_no_faction = ConvoScreen:new {
 		id = "no_faction",
 		leftDialog = "",
@@ -344,5 +354,16 @@ createMissionGiverConvoTemplate("coraline_dynes_mission_giver_convotemplate","co
 createMissionGiverConvoTemplate("corran_horn_mission_giver_convotemplate","corran_horn_mission_giver_conv_handler")
 createMissionGiverConvoTemplate("denell_kel_vannon_mission_giver_convotemplate","denell_kel_vannon_mission_giver_conv_handler")
 createMissionGiverConvoTemplate("didina_lippinoss_mission_giver_convotemplate","didina_lippinoss_mission_giver_conv_handler")
-
+createMissionGiverConvoTemplate("garm_bel_iblis_mission_giver_convotemplate","garm_bel_iblis_mission_giver_conv_handler")
+createMissionGiverConvoTemplate("gilad_pellaeon_mission_giver_convotemplate","gilad_pellaeon_mission_giver_conv_handler")
+createMissionGiverConvoTemplate("gilker_budz_mission_giver_convotemplate","gilker_budz_mission_giver_conv_handler")
+createMissionGiverConvoTemplate("ging_darjeek_mission_giver_convotemplate","ging_darjeek_mission_giver_conv_handler")
+createMissionGiverConvoTemplate("hal_horn_mission_giver_convotemplate","hal_horn_mission_giver_conv_handler")
+createMissionGiverConvoTemplate("jadam_questrel_mission_giver_convotemplate","jadam_questrel_mission_giver_conv_handler")
+createMissionGiverConvoTemplate("luthin_dlunar_mission_giver_convotemplate","luthin_dlunar_mission_giver_conv_handler")
+createMissionGiverConvoTemplate("noren_krast_mission_giver_convotemplate","noren_krast_mission_giver_conv_handler")
+createMissionGiverConvoTemplate("palejo_reshad_mission_giver_convotemplate","palejo_reshad_mission_giver_conv_handler")
+createMissionGiverConvoTemplate("talon_karrde_mission_giver_convotemplate","talon_karrde_mission_giver_conv_handler")
+createMissionGiverConvoTemplate("thrackan_sal_solo_mission_giver_convotemplate","thrackan_sal_solo_mission_giver_conv_handler")
+createMissionGiverConvoTemplate("lady_hutt_mission_giver_convotemplate","lady_hutt_mission_giver_conv_handler")
 

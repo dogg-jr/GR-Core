@@ -200,28 +200,12 @@ int SpawnAreaImplementation::tryToSpawn(SceneObject* object) {
 	randomPosition.setZ(spawnZ);
 
 	//lets check if we intersect with some object (buildings, etc..)
-	if (CollisionManager::checkSphereCollision(randomPosition, 64.f + finalSpawn->getSize(), zone))
-		return 7;
+	//if (CollisionManager::checkSphereCollision(randomPosition, 64.f + finalSpawn->getSize(), zone))
+	//	return 7;
 
-	//don't spawn in cities
-	SortedVector<ManagedReference<ActiveArea* > > activeAreas;
-	zone->getInRangeActiveAreas(randomPosition.getX(), randomPosition.getY(), &activeAreas, true);
-
-	for (int i = 0; i < activeAreas.size(); ++i) {
-		ActiveArea* area = activeAreas.get(i);
-
-		if (area->isRegion() || area->isMunicipalZone() || area->isNoSpawnArea())
-			return 8;
-	}
-
-	//check in range objects for no build radi
-	if (!planetManager->isBuildingPermittedAt(randomPosition.getX(), randomPosition.getY(), object, finalSpawn->getSize() + 64.f)) {
+	// Check the spot to see if spawning is allowed
+	if (!planetManager->isSpawningPermittedAt(randomPosition.getX(), randomPosition.getY(), finalSpawn->getSize() + 64.f)) {
 		return 9;
-	}
-
-	// Only spawn on relatively flat land
-	if (planetManager->getTerrainManager()->getHighestHeightDifference(randomPosition.getX() - 10, randomPosition.getY() - 10, randomPosition.getX() + 10, randomPosition.getY() + 10) > 10.0) {
-		return 13;
 	}
 
 	int spawnLimit = finalSpawn->getSpawnLimit();
@@ -243,9 +227,9 @@ int SpawnAreaImplementation::tryToSpawn(SceneObject* object) {
 	int maxDiff = finalSpawn->getMaxDifficulty();
 	int minDiff = finalSpawn->getMinDifficulty();
 	int difficultyLevel = System::random(maxDiff - minDiff) + minDiff;
-	int difficulty = (difficultyLevel - minDiff) / ((maxDiff > (minDiff + 5) ? maxDiff - minDiff : 5) / 5);
+	int difficulty = (float)(difficultyLevel - minDiff) / ((maxDiff > (minDiff + 5) ? (float)(maxDiff - minDiff) : 5.f) / 5.f);
 
-	if (difficulty == 5)
+	if (difficulty >= 5)
 		difficulty = 4;
 
 	CreatureManager* creatureManager = zone->getCreatureManager();

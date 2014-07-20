@@ -95,8 +95,7 @@ int LairObserverImplementation::notifyObserverEvent(unsigned int eventType, Obse
 			if (agent == NULL)
 				continue;
 
-			if (agent->interrupt(sourceObject, arg2) != 0)
-				return 1;
+			agent->activateInterrupt(sourceObject, arg2);
 		}
 
 		break;
@@ -352,7 +351,7 @@ bool LairObserverImplementation::checkForNewSpawns(TangibleObject* lair, Tangibl
 			}
 
 			if (creo == NULL)
-				creo = creatureManager->spawnCreature(templateToSpawn.hashCode(), 0, x, z, y);
+				creo = creatureManager->spawnCreatureWithAi(templateToSpawn.hashCode(), x, z, y);
 
 			if (creo == NULL)
 				continue;

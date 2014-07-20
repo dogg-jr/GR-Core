@@ -21,6 +21,7 @@
 #include "../../../ServerCore.h"
 
 #include "server/zone/managers/creature/AiMap.h"
+#include "server/zone/managers/collision/CollisionManager.h"
 
 //#include "server/zone/objects/creature/AiAgent.h"
 
@@ -35,6 +36,9 @@ Luna<LuaAiAgent>::RegType LuaAiAgent::Register[] = {
 		{ "setWatchObject", &LuaAiAgent::setWatchObject },
 		{ "setStalkObject", &LuaAiAgent::setStalkObject },
 		{ "getFollowObject", &LuaAiAgent::getFollowObject },
+		{ "getTargetOfTargetID", &LuaAiAgent::getTargetOfTargetID },
+		{ "getTargetID", &LuaCreatureObject::getTargetID },
+		{ "getObjectID", &LuaSceneObject::getObjectID },
 		{ "getFollowState", &LuaAiAgent::getFollowState },
 		{ "findNextPosition", &LuaAiAgent::findNextPosition },
 		{ "getMaxDistance", &LuaAiAgent::getMaxDistance },
@@ -65,7 +69,10 @@ Luna<LuaAiAgent>::RegType LuaAiAgent::Register[] = {
 		{ "isAttackableBy", &LuaAiAgent::isAttackableBy },
 		{ "isScentMasked", &LuaAiAgent::isScentMasked },
 		{ "isConcealed", &LuaAiAgent::isConcealed },
+		{ "shouldRetreat", &LuaAiAgent::shouldRetreat },
 		{ "clearCombatState", &LuaAiAgent::clearCombatState },
+		{ "isInCombat", &LuaAiAgent::isInCombat },
+		{ "checkLineOfSight", &LuaAiAgent::checkLineOfSight },
 		{ "activateRecovery", &LuaAiAgent::activateRecovery },
 		{ "setBehaviorStatus", &LuaAiAgent::setBehaviorStatus },
 		{ "getBehaviorStatus", &LuaAiAgent::getBehaviorStatus },
@@ -106,9 +113,7 @@ int LuaAiAgent::_getObject(lua_State* L) {
 int LuaAiAgent::setAiTemplate(lua_State* L) {
 	String tempName = lua_tostring(L, -1);
 
-	realObject->clearBehaviorList();
-	realObject->setupBehaviorTree(AiMap::instance()->getTemplate(tempName));
-	realObject->activateMovementEvent();
+	realObject->activateLoad(tempName);
 
 	return 0;
 }
@@ -145,6 +150,24 @@ int LuaAiAgent::getFollowObject(lua_State* L) {
 		lua_pushnil(L);
 	else
 		lua_pushlightuserdata(L, followObject);
+
+	return 1;
+}
+
+int LuaAiAgent::getTargetOfTargetID(lua_State* L) {
+	SceneObject* target = realObject->getFollowObject();
+	if (target == NULL || !target->isCreatureObject()) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	CreatureObject* targetCreo = cast<CreatureObject*>(target);
+	if (targetCreo == NULL) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_pushinteger(L, targetCreo->getTargetID());
 
 	return 1;
 }
@@ -293,7 +316,7 @@ int LuaAiAgent::followHasState(lua_State* L) {
 
 	int state = lua_tointeger(L, -1);
 
-	int retVal = cast<CreatureObject*>(follow)->hasState(state);
+	bool retVal = cast<CreatureObject*>(follow)->hasState(state);
 
 	lua_pushboolean(L, retVal);
 
@@ -401,12 +424,46 @@ int LuaAiAgent::isConcealed(lua_State* L) {
 	return 1;
 }
 
+int LuaAiAgent::shouldRetreat(lua_State* L) {
+	float range = lua_tonumber(L, -1);
+	PatrolPoint* homeLocation = realObject->getHomeLocation();
+
+	bool retVal;
+	SceneObject* target = realObject->getFollowObject();
+
+	if (target != NULL)
+		retVal = !homeLocation->isInRange(target, range);
+	else
+		retVal = !homeLocation->isInRange(realObject, range);
+
+	lua_pushboolean(L, retVal);
+
+	return 1;
+}
+
 int LuaAiAgent::clearCombatState(lua_State* L) {
 	bool clearDefenders = lua_toboolean(L, -1);
 
 	realObject->clearCombatState(clearDefenders);
 
 	return 0;
+}
+
+int LuaAiAgent::isInCombat(lua_State* L) {
+	bool retVal = realObject->isInCombat();
+
+	lua_pushboolean(L, retVal);
+
+	return 1;
+}
+
+int LuaAiAgent::checkLineOfSight(lua_State* L) {
+	SceneObject* obj = (SceneObject*) lua_touserdata(L, -1);
+	bool retVal = CollisionManager::checkLineOfSight(realObject.get(), obj);
+
+	lua_pushboolean(L, retVal);
+
+	return 1;
 }
 
 int LuaAiAgent::activateRecovery(lua_State* L) {

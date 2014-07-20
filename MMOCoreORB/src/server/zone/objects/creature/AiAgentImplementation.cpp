@@ -33,46 +33,46 @@
 #include <cmath>
 #include <cstdlib>
 
-#include "../../../../autogen/server/zone/managers/creature/CreatureManager.h"
-#include "../../../../autogen/server/zone/managers/creature/PetManager.h"
-#include "../../../../autogen/server/zone/managers/planet/PlanetManager.h"
-#include "../../../../autogen/server/zone/managers/player/PlayerManager.h"
-#include "../../../../autogen/server/zone/objects/cell/CellObject.h"
-#include "../../../../autogen/server/zone/objects/creature/AiAgent.h"
-#include "../../../../autogen/server/zone/objects/creature/conversation/ConversationObserver.h"
-#include "../../../../autogen/server/zone/objects/player/PlayerObject.h"
-#include "../../../../autogen/server/zone/objects/tangible/weapon/WeaponObject.h"
-#include "../../../../autogen/server/zone/Zone.h"
-#include "../../../../autogen/server/zone/ZoneProcessServer.h"
-#include "../../../../autogen/server/zone/ZoneServer.h"
-#include "../../managers/collision/CollisionManager.h"
-#include "../../managers/collision/PathFinderManager.h"
-#include "../../managers/combat/CombatManager.h"
-#include "../../managers/components/ComponentManager.h"
-#include "../../managers/conversation/ConversationManager.h"
-#include "../../managers/creature/AiMap.h"
-#include "../../managers/creature/CreatureTemplateManager.h"
-#include "../../managers/faction/FactionManager.h"
-#include "../../managers/name/NameManager.h"
-#include "../../managers/stringid/StringIdManager.h"
-#include "../../packets/object/StartNpcConversation.h"
-#include "../../packets/scene/AttributeListMessage.h"
-#include "../../packets/scene/LightUpdateTransformMessage.h"
-#include "../../packets/scene/LightUpdateTransformWithParentMessage.h"
-#include "../../packets/scene/UpdateTransformMessage.h"
-#include "../../packets/scene/UpdateTransformWithParentMessage.h"
-#include "../../templates/AiTemplate.h"
-#include "../../templates/mobile/CreatureTemplate.h"
-#include "../../templates/mobile/MobileOutfit.h"
-#include "../../templates/mobile/MobileOutfitGroup.h"
-#include "../../templates/SharedObjectTemplate.h"
-#include "../../ZoneReference.h"
-#include "../player/FactionStatus.h"
-#include "../scene/ObserverEventType.h"
-#include "../scene/variables/DeltaVector.h"
-#include "../scene/variables/StringId.h"
-#include "../scene/WorldCoordinates.h"
-#include "../tangible/threat/ThreatMap.h"
+#include "server/zone/managers/creature/CreatureManager.h"
+#include "server/zone/managers/creature/PetManager.h"
+#include "server/zone/managers/planet/PlanetManager.h"
+#include "server/zone/managers/player/PlayerManager.h"
+#include "server/zone/objects/cell/CellObject.h"
+#include "server/zone/objects/creature/AiAgent.h"
+#include "server/zone/objects/creature/conversation/ConversationObserver.h"
+#include "server/zone/objects/player/PlayerObject.h"
+#include "server/zone/objects/tangible/weapon/WeaponObject.h"
+#include "server/zone/Zone.h"
+#include "server/zone/ZoneProcessServer.h"
+#include "server/zone/ZoneServer.h"
+#include "server/zone/managers/collision/CollisionManager.h"
+#include "server/zone/managers/collision/PathFinderManager.h"
+#include "server/zone/managers/combat/CombatManager.h"
+#include "server/zone/managers/components/ComponentManager.h"
+#include "server/zone/managers/conversation/ConversationManager.h"
+#include "server/zone/managers/creature/AiMap.h"
+#include "server/zone/managers/creature/CreatureTemplateManager.h"
+#include "server/zone/managers/faction/FactionManager.h"
+#include "server/zone/managers/name/NameManager.h"
+#include "server/zone/managers/stringid/StringIdManager.h"
+#include "server/zone/packets/object/StartNpcConversation.h"
+#include "server/zone/packets/scene/AttributeListMessage.h"
+#include "server/zone/packets/scene/LightUpdateTransformMessage.h"
+#include "server/zone/packets/scene/LightUpdateTransformWithParentMessage.h"
+#include "server/zone/packets/scene/UpdateTransformMessage.h"
+#include "server/zone/packets/scene/UpdateTransformWithParentMessage.h"
+#include "server/zone/templates/AiTemplate.h"
+#include "server/zone/templates/mobile/CreatureTemplate.h"
+#include "server/zone/templates/mobile/MobileOutfit.h"
+#include "server/zone/templates/mobile/MobileOutfitGroup.h"
+#include "server/zone/templates/SharedObjectTemplate.h"
+#include "server/zone//ZoneReference.h"
+#include "server/zone/objects/player/FactionStatus.h"
+#include "server/zone/objects/scene/ObserverEventType.h"
+#include "server/zone/objects/scene/variables/DeltaVector.h"
+#include "server/zone/objects/scene/variables/StringId.h"
+#include "server/zone/objects/scene/WorldCoordinates.h"
+#include "server/zone/objects/tangible/threat/ThreatMap.h"
 #include "ai/bt/CompositeBehavior.h"
 #include "components/AiDefaultComponent.h"
 #include "CreatureAttribute.h"
@@ -84,6 +84,8 @@
 #include "events/AiMoveEvent.h"
 #include "events/AiThinkEvent.h"
 #include "events/AiWaitEvent.h"
+#include "events/AiInterruptTask.h"
+#include "events/AiLoadTask.h"
 #include "events/CamoTask.h"
 #include "events/DespawnCreatureOnPlayerDissappear.h"
 #include "events/DespawnCreatureTask.h"
@@ -294,8 +296,6 @@ void AiAgentImplementation::loadTemplateData(CreatureTemplate* templateData) {
 			}
 		}
 	}
-
-	setupBehaviorTree();
 }
 
 void AiAgentImplementation::setLevel(int lvl, bool randomHam) {
@@ -448,9 +448,11 @@ void AiAgentImplementation::selectDefaultAttack() {
 }
 
 void AiAgentImplementation::enqueueAttack() {
-	enqueueCommand(nextActionCRC, 0, followObject->getObjectID(), nextActionArgs);
-	nextActionCRC = 0;
-	nextActionArgs = "";
+	if (followObject != NULL) {
+		enqueueCommand(nextActionCRC, 0, followObject->getObjectID(), nextActionArgs);
+		nextActionCRC = 0;
+		nextActionArgs = "";
+	}
 }
 
 bool AiAgentImplementation::validateStateAttack() {
@@ -474,13 +476,13 @@ SceneObject* AiAgentImplementation::getTargetFromMap() {
 }
 
 SceneObject* AiAgentImplementation::getTargetFromDefenders() {
-	CreatureObject* target = NULL;
+	SceneObject* target = NULL;
 
 	if (defenderList.size() > 0) {
 		for (int i = 0; i < defenderList.size(); ++i) {
 			SceneObject* tarObj = defenderList.get(i);
 
-			if (tarObj->isCreatureObject()) {
+			if (tarObj != NULL && tarObj->isCreatureObject()) {
 				CreatureObject* targetCreature = cast<CreatureObject*>(tarObj);
 
 				if (!targetCreature->isDead() && !targetCreature->isIncapacitated() && targetCreature->getDistanceTo(_this.get()) < 128.f && targetCreature->isAttackableBy(_this.get())) {
@@ -491,6 +493,15 @@ SceneObject* AiAgentImplementation::getTargetFromDefenders() {
 					// if the object on the defender list is no longer attackable, remove it
 					removeDefender(targetCreature);
 				}
+			} else if (tarObj != NULL && tarObj->isTangibleObject()) {
+				TangibleObject* targetTano = cast<TangibleObject*>(tarObj);
+
+				if (!targetTano->isDestroyed() && targetTano->getDistanceTo(_this.get()) < 128.f && targetTano->isAttackableBy(_this.get())) {
+					target = targetTano;
+					break;
+				} else {
+					removeDefender(targetTano);
+				}
 			}
 		}
 	}
@@ -499,7 +510,19 @@ SceneObject* AiAgentImplementation::getTargetFromDefenders() {
 }
 
 bool AiAgentImplementation::validateTarget() {
-	return followObject != NULL && followObject->isInRange(_this.get(), 128) && followObject->isCreatureObject() && cast<CreatureObject*>(followObject.get())->isAttackableBy(_this.get()) && !cast<CreatureObject*>(followObject.get())->isDead() && !cast<CreatureObject*>(followObject.get())->isIncapacitated();
+	if (followObject == NULL)
+		return false;
+
+	if (!followObject->isInRange(_this.get(), 128))
+		return false;
+
+	if (followObject->isCreatureObject() && (!cast<CreatureObject*>(followObject.get())->isAttackableBy(_this.get()) || cast<CreatureObject*>(followObject.get())->isDead() || cast<CreatureObject*>(followObject.get())->isIncapacitated()))
+		return false;
+
+	if (followObject->isTangibleObject() && (!cast<TangibleObject*>(followObject.get())->isAttackableBy(_this.get()) || cast<TangibleObject*>(followObject.get())->isDestroyed()))
+		return false;
+
+	return true;
 }
 
 int AiAgentImplementation::notifyAttack(Observable* observable) {
@@ -770,6 +793,8 @@ void AiAgentImplementation::respawn(Zone* zone, int level) {
 		zone->transferObject(_this.get(), -1, true);
 
 	respawnCounter++;
+
+	activateLoad("");
 }
 
 void AiAgentImplementation::sendBaselinesTo(SceneObject* player) {
@@ -1023,7 +1048,9 @@ bool AiAgentImplementation::findNextPosition(float maxDistance, bool walk) {
 
 			targetMutex.unlock();
 
-			targetPosition->setPositionZ(planetManager->findClosestWorldFloor(targetPosition->getPositionX(), targetPosition->getPositionY(), targetPosition->getPositionZ(), this->getSwimHeight()));
+			IntersectionResults intersections;
+			CollisionManager::getWorldFloorCollisions(targetPosition->getPositionX(), targetPosition->getPositionY(), zone, true, &intersections, (CloseObjectsVector*) this->getCloseObjects());
+			targetPosition->setPositionZ(planetManager->findClosestWorldFloor(targetPosition->getPositionX(), targetPosition->getPositionY(), targetPosition->getPositionZ(), this->getSwimHeight(), &intersections, (CloseObjectsVector*) this->getCloseObjects()));
 
 			targetMutex.lock();
 		}
@@ -1213,7 +1240,9 @@ bool AiAgentImplementation::findNextPosition(float maxDistance, bool walk) {
 							if (zone != NULL) {
 								targetMutex.unlock();
 
-								newPositionZ = zone->getPlanetManager()->findClosestWorldFloor(newPositionX, newPositionY, targetPosition->getPositionZ(), this->getSwimHeight());
+								IntersectionResults intersections;
+								CollisionManager::getWorldFloorCollisions(newPositionX, newPositionY, zone, true, &intersections, (CloseObjectsVector*) this->getCloseObjects());
+								newPositionZ = zone->getPlanetManager()->findClosestWorldFloor(newPositionX, newPositionY, targetPosition->getPositionZ(), this->getSwimHeight(), &intersections, (CloseObjectsVector*) this->getCloseObjects());
 
 								targetMutex.lock();
 							}
@@ -1378,7 +1407,9 @@ bool AiAgentImplementation::generatePatrol(int num, float dist) {
 
 		if (newPoint.getCell() == NULL && zone != NULL) {
 			PlanetManager* planetManager = zone->getPlanetManager();
-			newPoint.setPositionZ(planetManager->findClosestWorldFloor(newPoint.getPositionX(), newPoint.getPositionY(), newPoint.getPositionZ(), this->getSwimHeight()));
+			IntersectionResults intersections;
+			CollisionManager::getWorldFloorCollisions(newPoint.getPositionX(), newPoint.getPositionY(), zone, true, &intersections, (CloseObjectsVector*) this->getCloseObjects());
+			newPoint.setPositionZ(planetManager->findClosestWorldFloor(newPoint.getPositionX(), newPoint.getPositionY(), newPoint.getPositionZ(), this->getSwimHeight(), &intersections, (CloseObjectsVector*) this->getCloseObjects()));
 		}
 
 		patrolPoints.add(newPoint);
@@ -1638,14 +1669,14 @@ int AiAgentImplementation::inflictDamage(TangibleObject* attacker, int damageTyp
 
 	activateRecovery();
 	
-	if (attacker->isPlayerCreature()) {
-		CreatureObject* player = cast<CreatureObject*>( attacker);
+	if (attacker->isCreatureObject()) {
+		CreatureObject* creature = cast<CreatureObject*>( attacker);
 
 		if (damage > 0) {
-			getThreatMap()->addDamage(player, damage);
+			getThreatMap()->addDamage(creature, damage);
 
 			if (System::random(5) == 1) {
-				setDefender(player);
+				setDefender(creature);
 			}
 		}
 	}
@@ -1658,14 +1689,14 @@ int AiAgentImplementation::inflictDamage(TangibleObject* attacker, int damageTyp
 
 	activateRecovery();
 
-	if (attacker->isPlayerCreature()) {
-		CreatureObject* player = cast<CreatureObject*>( attacker);
+	if (attacker->isCreatureObject()) {
+		CreatureObject* creature = cast<CreatureObject*>( attacker);
 
 		if (damage > 0) {
-			getThreatMap()->addDamage(player, damage, xp);
+			getThreatMap()->addDamage(creature, damage, xp);
 
 			if (System::random(5) == 1) {
-				setDefender(player);
+				setDefender(creature);
 			}
 		}
 	}
@@ -2117,8 +2148,6 @@ void AiAgentImplementation::setupBehaviorTree(AiTemplate* aiTemplate) {
 
 	Vector<Reference<LuaAiTemplate*> >* treeTemplate = aiTemplate->getTree();
 
-	Locker locker(&behaviorMutex);
-
 	stopWaiting();
 	setWait(0);
 
@@ -2208,8 +2237,6 @@ void AiAgentImplementation::setupBehaviorTree(AiTemplate* getTarget, AiTemplate*
 	rootSelector->setID(String("root"));
 	attackSequence->setID(String("attackSequence"));
 
-	clearBehaviorList();
-
 	addBehaviorToTree(attackSequence, rootSelector);
 
 	setupBehaviorTree(getTarget);
@@ -2223,8 +2250,6 @@ void AiAgentImplementation::setupBehaviorTree(AiTemplate* getTarget, AiTemplate*
 
 	setupBehaviorTree(idle);
 	addCurrentBehaviorToTree(rootSelector);
-
-	Locker locker(&behaviorMutex);
 
 	behaviors.put("root", rootSelector);
 	behaviors.put("attackSequence", attackSequence);
@@ -2277,7 +2302,6 @@ void AiAgentImplementation::addBehaviorToTree(Behavior* b, CompositeBehavior* pa
 }
 
 void AiAgentImplementation::addCurrentBehaviorToTree(CompositeBehavior* par) {
-	Locker locker(&behaviorMutex);
 	Behavior* b = behaviors.get(currentBehaviorID);
 	addBehaviorToTree(b, par);
 }
@@ -2306,7 +2330,6 @@ void AiAgentImplementation::resetBehaviorList() {
 }
 
 void AiAgentImplementation::clearBehaviorList() {
-	Locker locker(&behaviorMutex);
 	for (int i = 0; i < behaviors.size(); i++) {
 		Behavior* b = behaviors.get(i);
 		if (b != NULL) {
@@ -2320,7 +2343,6 @@ void AiAgentImplementation::clearBehaviorList() {
 }
 
 int AiAgentImplementation::interrupt(SceneObject* source, int64 msg) {
-	Locker bLocker(&behaviorMutex);
 	Behavior* b = behaviors.get(currentBehaviorID);
 
 	if (b == NULL)
@@ -2337,6 +2359,7 @@ void AiAgentImplementation::broadcastInterrupt(int64 msg) {
 
 	try {
 		if (closeobjects == NULL) {
+			info("Null closeobjects vector in AiAgentImplementation::broadcastInterrupt", true);
 			zone->getInRangeObjects(getPositionX(), getPositionY(), 192, &closeAiAgents, true);
 		} else {
 			closeAiAgents.removeAll(closeobjects->size(), 10);
@@ -2352,9 +2375,7 @@ void AiAgentImplementation::broadcastInterrupt(int64 msg) {
 		if (_this.get() == agent || agent == NULL)
 			continue;
 
-		Locker clocker(agent, _this.get());
-
-		agent->interrupt(_this.get(), msg);
+		agent->activateInterrupt(_this.get(), msg);
 	}
 }
 
@@ -2364,7 +2385,17 @@ void AiAgentImplementation::setCombatState() {
 	if (homeObject != NULL)
 		homeObject->notifyObservers(ObserverEventType::AIMESSAGE, _this.get(), ObserverEventType::STARTCOMBAT);
 
-	broadcastInterrupt(ObserverEventType::STARTCOMBAT);
+	//broadcastInterrupt(ObserverEventType::STARTCOMBAT);
 
-	interrupt(_this.get(), ObserverEventType::STARTCOMBAT);
+	activateInterrupt(_this.get(), ObserverEventType::STARTCOMBAT);
+}
+
+void AiAgentImplementation::activateInterrupt(SceneObject* source, int64 msg) {
+	AiInterruptTask* task = new AiInterruptTask(_this.get(), source, msg);
+	task->execute();
+}
+
+void AiAgentImplementation::activateLoad(const String& temp) {
+	AiLoadTask* task = new AiLoadTask(_this.get(), temp);
+	task->execute();
 }

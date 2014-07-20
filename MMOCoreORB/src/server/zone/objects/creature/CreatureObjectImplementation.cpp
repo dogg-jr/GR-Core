@@ -761,6 +761,7 @@ bool CreatureObjectImplementation::setState(uint64 state, bool notifyClient) {
 					//Locker locker(thisZone);
 
 					if (closeobjects == NULL) {
+						info("Null closeobjects vector in CreatureObjectImplementation::setState", true);
 						thisZone->getInRangeObjects(getWorldPositionX(), getWorldPositionY(), 192, &closeSceneObjects, true);
 						maxInRangeObjects = closeSceneObjects.size();
 					} else {
@@ -937,11 +938,11 @@ void CreatureObjectImplementation::setHAM(int type, int value,
 }
 
 int CreatureObjectImplementation::inflictDamage(TangibleObject* attacker, int damageType, float damage, bool destroy, const String& xp, bool notifyClient) {
-	if (attacker->isPlayerCreature()) {
-		CreatureObject* player = cast<CreatureObject*>( attacker);
+	if (attacker->isCreatureObject()) {
+		CreatureObject* creature = cast<CreatureObject*>( attacker);
 
 		if (damage > 0) {
-			getThreatMap()->addDamage(player, damage, xp);
+			getThreatMap()->addDamage(creature, damage, xp);
 		}
 	}
 
@@ -2541,8 +2542,8 @@ bool CreatureObjectImplementation::isAttackableBy(TangibleObject* object){
 	if(object->isCreatureObject())
 		return isAttackableBy(cast<CreatureObject*>(object));
 
-	// if you want to allow minefields to attack NPC
-	if(this->isAiAgent()){
+	// TODO (dannuic): this will prevent TANOs from attacking mobs (turrets, minefields, etc)
+	if(this->isAiAgent()) {
 		return false;
 	}
 
@@ -2590,10 +2591,7 @@ bool CreatureObjectImplementation::isAttackableBy(CreatureObject* object) {
 			if (owner == NULL)
 				return false;
 
-			if (isPlayerCreature()) // TODO: remove player check once Ai vs. Ai combat is enabled
-				return isAttackableBy(owner);
-			else
-				return false;
+			return isAttackableBy(owner);
 		}
 
 		if(!object->isRebel() && !object->isImperial())
@@ -2601,7 +2599,7 @@ bool CreatureObjectImplementation::isAttackableBy(CreatureObject* object) {
 
 		if(getFaction() == 0 || getFaction() == object->getFaction())
 			return false;
-		else if (isPlayerCreature()){
+		else if (isPlayerCreature()) {
 
 			if(getPlayerObject() == NULL || getPlayerObject()->getFactionStatus() == FactionStatus::ONLEAVE)
 				return false;

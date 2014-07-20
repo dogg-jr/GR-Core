@@ -1537,7 +1537,7 @@ int DirectorManager::spawnMobile(lua_State* L) {
 	CreatureObject* creature = creatureManager->spawnCreature(mobile.hashCode(), 0, x, z, y, parentID);
 
 	if (creature == NULL) {
-		instance()->error("coult not spawn mobile " + mobile);
+		instance()->error("could not spawn mobile " + mobile);
 
 		lua_pushnil(L);
 	} else {
@@ -1547,8 +1547,7 @@ int DirectorManager::spawnMobile(lua_State* L) {
 			AiAgent* ai = cast<AiAgent*>(creature);
 			ai->setRespawnTimer(respawnTimer);
 			// TODO (dannuic): this is a temporary measure until we add an AI setting method to DirectorManager -- make stationary the default
-			ai->clearBehaviorList();
-			ai->setupBehaviorTree(AiMap::instance()->getTemplate("stationary"));
+			ai->activateLoad("stationary");
 		}
 
 		creature->_setUpdated(true); //mark updated so the GC doesnt delete it while in LUA
@@ -1593,7 +1592,7 @@ int DirectorManager::spawnMobileRandom(lua_State* L) {
 	CreatureObject* creature = creatureManager->spawnCreature(mobile.hashCode(), 0, x, z, y, parentID);
 
 	if (creature == NULL) {
-		instance()->error("coult not spawn mobile " + mobile);
+		instance()->error("could not spawn mobile " + mobile);
 
 		lua_pushnil(L);
 	} else {
@@ -1604,8 +1603,7 @@ int DirectorManager::spawnMobileRandom(lua_State* L) {
 			ai->setRespawnTimer(respawnTimer);
 			ai->setRandomRespawn(true);
 			// TODO (dannuic): this is a temporary measure until we add an AI setting method to DirectorManager -- make stationary the default
-			ai->clearBehaviorList();
-			ai->setupBehaviorTree(AiMap::instance()->getTemplate("stationary"));
+			ai->activateLoad("stationary");
 		}
 
 		creature->_setUpdated(true); //mark updated so the GC doesnt delete it while in LUA
@@ -2073,7 +2071,7 @@ Vector3 DirectorManager::generateSpawnPoint(CreatureObject* creatureObject, floa
 		position = Vector3(newX, newY, newZ);
 
 
-		found = creatureObject->getZone()->getPlanetManager()->isBuildingPermittedAt(position.getX(), position.getY(), NULL, extraNoBuildRadius) &
+		found = creatureObject->getZone()->getPlanetManager()->isSpawningPermittedAt(position.getX(), position.getY(), extraNoBuildRadius) &
 				!CollisionManager::checkSphereCollision(position, sphereCollision, creatureObject->getZone());
 
 		retries--;

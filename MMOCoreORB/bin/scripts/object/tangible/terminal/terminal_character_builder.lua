@@ -2182,9 +2182,7 @@ object_tangible_terminal_terminal_character_builder = object_tangible_terminal_s
 					"Veteran Reward (Hutt Greed)", "object/tangible/veteran_reward/one_year_anniversary/painting_06.iff",
 					"Veteran Reward (Smuggler's Run)", "object/tangible/veteran_reward/one_year_anniversary/painting_07.iff",
 					"Veteran Reward (Imperial TIE Oppressor)", "object/tangible/veteran_reward/one_year_anniversary/painting_08.iff",
-					"Veteran Reward (Emperor's Eyes TIE Sentinel)", "object/tangible/veteran_reward/one_year_anniversary/painting_09.iff",
-					"Clone Trooper", "object/tangible/painting/painting_clone_trooper_01.iff",
-					"General Grievous", "object/tangible/painting/painting_grievous_01.iff"
+					"Veteran Reward (Emperor's Eyes TIE Sentinel)", "object/tangible/veteran_reward/one_year_anniversary/painting_09.iff"
 				},
 				"Veteran Rewards (INCOMPLETE)",
 				{

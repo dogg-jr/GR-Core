@@ -18,6 +18,7 @@ private:
 	enum Phase { BEGIN, SAMPLING, END} currentPhase;
 	int waitCount;
 	int originalMask;
+	int faction;
 	ManagedReference<Creature*> creature;
 	ManagedReference<CreatureObject*> player;
 public:
@@ -27,7 +28,16 @@ public:
 		waitCount = 0;
 		creature = cre;
 		player = playo;
-		originalMask = 0;
+		originalMask = creature->getPvpStatusBitmask();
+		faction = creature->getFaction();
+	}
+	void resetCreatureStatus() {
+		creature->setFaction(faction);
+		creature->setPvpStatusBitmask(originalMask,true);
+	}
+	void prepareCreatureForSampling() {
+		creature->setFaction(player->getFaction());
+		creature->setPvpStatusBitmask(CreatureFlag::NONE,true);
 	}
 	void run() {
 		Locker locker(player);
@@ -35,22 +45,22 @@ public:
 		player->removePendingTask("sampledna");
 		if (!creature->isInRange(player, 16.f) ) {
 			player->sendSystemMessage("@bio_engineer:harvest_dna_out_of_range");
-			creature->setPvpStatusBitmask(originalMask,true);
+			resetCreatureStatus();
 			return;
 		}
 		if (creature->isDead()) {
 			player->sendSystemMessage("@bio_engineer:harvest_dna_target_corpse");
-			creature->setPvpStatusBitmask(originalMask,true);
+			resetCreatureStatus();
 			return;
 		}
 		if (creature->isInCombat()) {
 			player->sendSystemMessage("@bio_engineer:harvest_dna_creature_in_combat");
-			creature->setPvpStatusBitmask(originalMask,true);
+			resetCreatureStatus();
 			return;
 		}
 		if (!creature->hasDNA()){
 			player->sendSystemMessage("@bio_engineer:harvest_dna_cant_harvest");
-			creature->setPvpStatusBitmask(originalMask,true);
+			resetCreatureStatus();
 			return;
 		}
 		int mindCost = player->calculateCostAdjustment(CreatureAttribute::FOCUS, 200);
@@ -62,14 +72,15 @@ public:
 				if (player->getHAM(CreatureAttribute::MIND) < mindCost) {
 					player->sendSystemMessage("@bio_engineer:harvest_dna_attrib_too_low");
 				} else {
+					prepareCreatureForSampling();
 					player->inflictDamage(player, CreatureAttribute::MIND, mindCost, false, true);
 					player->sendSystemMessage("@bio_engineer:harvest_dna_begin_harvest");
 					currentPhase = SAMPLING;
+					// We grab the original mask and faction in ctor
+					// Turn off attackable flag while sampling (publish 3)
+					// now rescheudle ourselves
 					player->addPendingTask("sampledna",this,1000);
 					player->doAnimation("heal_other");
-					originalMask = creature->getPvpStatusBitmask();
-					// Turn off attackable flag while sampling (publish 3)
-					creature->clearState(CreatureFlag::ATTACKABLE,true);
 				}
 				break;
 			case SAMPLING:
@@ -81,8 +92,9 @@ public:
 				player->addPendingTask("sampledna",this,1000);
 				break;
 			case END:
-				// Re-Enable Mask
-				creature->setPvpStatusBitmask(originalMask,true);
+				// Re-Enable Mask and faction
+				resetCreatureStatus();
+				// We get stuck apparently sometimes
 				bool success = false;
 				bool critical = false;
 				bool aggro = false;
@@ -170,6 +182,7 @@ public:
 						creature->setDnaState(CreatureManager::DNASAMPLED);
 					}
 					if (aggro) {
+						crosslocker.release();
 						CombatManager::instance()->startCombat(creature,player,true);
 					}
 					if (death) {
@@ -178,6 +191,7 @@ public:
 				} else {
 					player->sendSystemMessage("@bio_engineer:harvest_dna_failed");
 					if (aggro) {
+						crosslocker.release();
 						CombatManager::instance()->startCombat(creature,player,true);
 					}
 				}

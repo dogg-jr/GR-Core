@@ -46,7 +46,7 @@ void DynamicSpawnObserverImplementation::spawnInitialMobiles(SceneObject* buildi
 	if (building->getZone() == NULL)
 		return;
 
-	int spawnLimitAdjustment = difficulty - 2;
+	int spawnLimitAdjustment = (difficulty - 2) / 2;
 
 	int totalNumberToSpawn = (lairTemplate->getSpawnLimit() / 3) + spawnLimitAdjustment;
 	VectorMap<String, int> objectsToSpawn; // String mobileTemplate, int number to spawn
@@ -96,7 +96,7 @@ void DynamicSpawnObserverImplementation::spawnInitialMobiles(SceneObject* buildi
 			}
 
 			if (creo == NULL)
-				creo = creatureManager->spawnCreature(templateToSpawn.hashCode(), 0, x, z, y);
+				creo = creatureManager->spawnCreatureWithAi(templateToSpawn.hashCode(), x, z, y);
 
 			if (creo == NULL)
 				continue;

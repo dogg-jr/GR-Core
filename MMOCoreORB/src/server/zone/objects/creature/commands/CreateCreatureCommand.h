@@ -138,9 +138,12 @@ public:
 		if (baby)
 			npc = cast<AiAgent*>(creatureManager->spawnCreatureAsBaby(templ, posX, posZ, posY, parID));
 		else if (tempName.indexOf(".iff") != -1)
-			npc = cast<AiAgent*>(creatureManager->spawnCreature(templ, posX, posZ, posY, parID));
-		else
+			npc = cast<AiAgent*>(creatureManager->spawnCreatureWithAi(templ, posX, posZ, posY, parID));
+		else {
 			npc = cast<AiAgent*>(creatureManager->spawnCreature(templ, objTempl, posX, posZ, posY, parID));
+			if (npc != NULL)
+				npc->activateLoad("");
+		}
 
 		if (baby && npc == NULL)
 			creature->sendSystemMessage("You cannot spawn " + tempName + " as a baby.");
@@ -148,11 +151,8 @@ public:
 			creature->sendSystemMessage("could not spawn " + arguments.toString());
 
 		if (!aiTemplate.isEmpty()) {
-			npc->setupBehaviorTree(AiMap::instance()->getTemplate(aiTemplate));
-			npc->activateMovementEvent();
+			npc->activateLoad(aiTemplate);
 		}
-
-		//npc->setupBehaviorTree(AiMap::instance()->getGetTargetTemplate(0), AiMap::instance()->getSelectAttackTemplate(0), AiMap::instance()->getCombatMoveTemplate(0), AiMap::instance()->getIdleTemplate(0));
 
 		if (npc != NULL)
 			npc->updateDirection(Math::deg2rad(creature->getDirectionAngle()));

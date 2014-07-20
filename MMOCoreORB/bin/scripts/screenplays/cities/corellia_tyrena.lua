@@ -67,7 +67,6 @@ function CorelliaTyrenaScreenPlay:spawnMobiles()
 	spawnMobile("corellia", "trainer_entertainer", 0,6.15345,-0.894992,-19.3905,0,2625358)
 	--{"artisan",60,-8.04223,-0.894908,-17.7225,360.011,2625360, "conversation", ""},
 	--{"corsec_agent",300,-8.04223,-0.894941,-16.6225,180.002,2625360, "conversation", ""},
-	--{"karena_keer",60,-7.91182,-0.895002,18.5763,115.51,2625361, "calm", "Karena Keer"},
 	--{"shalera_the_hutt",60,-19.2041,-0.894989,22.0094,239.061,2625364, "calm", "Shalera the Hutt"},
 	--{"vrak",60,-26.3961,-0.894991,23.1611,112,2625364, "nervous", ""},
 	--{"commoner",60,-26.4983,-0.519991,10.8543,179.992,2625365, "conversation", ""},
@@ -113,7 +112,6 @@ function CorelliaTyrenaScreenPlay:spawnMobiles()
 	--{"commoner",60,-17.1386,2.25,17.5614,90.0005,1935472, "conversation", ""},
 	--{"corsec_deserter",300,-19.1229,9,14.3195,135.007,1935472, "conversation", ""},
 	--{"corsec_detective",300,-18.0229,9,14.3195,180.008,1935472, "conversation", ""},
-	spawnMobile("corellia", "hal_horn", 60,-15.0532,2.25,11.1395,133.195,1935472)
 	--{"r3",60,-16.1386,2.25,18.5614,173.343,1935472, "calm", "R3-X8"},
 	--{"slicer",60,-18.0229,9,13.2195,360.011,1935472, "conversation", ""},
 
@@ -318,7 +316,6 @@ function CorelliaTyrenaScreenPlay:spawnMobiles()
 	--{"mercenary",60,-5398.52,21,-2675.03,180.005,0, "conversation", ""},
 	--{"mercenary",60,-5059.06,21,-2400.08,0,0, "conversation", ""},
 	spawnMobile("corellia", "noble", 60,-5441.11,21.0895,-2624.13,269.845,0)
-	--{"noren_krast",60,-5203.33,21,-2488.13,176.643,0, "calm", "Noren Krast"},
 	--{"r2",60,-5295.88,21,-2528.24,196.589,0, "calm", "R2-B0"},
 	--{"r2",60,-5297.6,21,-2396.69,271.4,0, "calm", "R2-X2"},
 	--{"r2",60,-4954.63,21,-2376.82,26.4361,0, "calm", "R2-E3"},
