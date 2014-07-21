@@ -1503,7 +1503,7 @@ object_tangible_terminal_terminal_character_builder = object_tangible_terminal_s
 					"Master", "crafting_weaponsmith_master"
 				}
 			},
-			"Unlearn All Skills", "unlearn_all_skills",
+			--"Unlearn All Skills", "unlearn_all_skills",
 			--"Cleanse Character", "cleanse_character",
 			"Enhance Character", "enhance_character",
 			--"Learn Languages", "language",
@@ -1933,7 +1933,9 @@ object_tangible_terminal_terminal_character_builder = object_tangible_terminal_s
 							"Small Generic House Deed Floorplan 2", "object/tangible/deed/player_house_deed/generic_house_small_floor_02_deed.iff",
 							"Small Generic House Deed (Style 2)", "object/tangible/deed/player_house_deed/generic_house_small_style_02_deed.iff",
 							"Small Generic House Deed Floorplan 2 (Style 2)", "object/tangible/deed/player_house_deed/generic_house_small_style_02_floor_02_deed.iff",
-							"AT-AT House", "object/tangible/deed/player_house_deed/atat_house_deed.iff"
+							"AT-AT House", "object/tangible/deed/player_house_deed/atat_house_deed.iff",
+							"Musty House", "object/tangible/deed/player_house_deed/musty_house_deed.iff",
+							"Jedi House", "object/tangible/deed/player_house_deed/jedi_house_deed.iff"
 						},
 						"City Deeds",
 						{
