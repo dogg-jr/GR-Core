@@ -40,7 +40,7 @@ black_sun_henchman = Creature:new {
 				{group = "wearables_common", chance = 500000},
 				{group = "wearables_uncommon", chance = 500000}
 			},
-			lootChance = 3500000
+			lootChance = 9000000
 		}	
 	},
 	weapons = {"pirate_weapons_heavy"},

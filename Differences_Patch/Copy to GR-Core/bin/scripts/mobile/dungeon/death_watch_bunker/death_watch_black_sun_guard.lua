@@ -1,16 +1,16 @@
-death_watch_black_sun_thug = Creature:new {
-	objectName = "@mob/creature_names:mand_bunker_blksun_thug",
+death_watch_black_sun_guard = Creature:new {
+	objectName = "@mob/creature_names:mand_bunker_blksun_guard",
 	socialGroup = "death_watch",
 	pvpFaction = "",
 	faction = "",
-	level = 86,
-	chanceHit = 0.85,
-	damageMin = 570,
-	damageMax = 850,
-	baseXp = 8130,
-	baseHAM = 15000,
-	baseHAMmax = 15000,
-	armor = 1,
+	level = 96,
+	chanceHit = 0.95,
+	damageMin = 620,
+	damageMax = 950,
+	baseXp = 9057,
+	baseHAM = 22000,
+	baseHAMmax = 22000,
+	armor = 2,
 	resists = {40,40,60,35,55,70,35,40,-1},
 	meatType = "",
 	meatAmount = 0,
@@ -26,14 +26,14 @@ death_watch_black_sun_thug = Creature:new {
 	optionsBitmask = 128,
 	diet = HERBIVORE,
 
-	templates = {"object/mobile/dressed_black_sun_thug.iff"},
+	templates = {"object/mobile/dressed_black_sun_guard.iff"},
 	lootGroups = {
 		{
 			groups = {
 				{group = "death_watch_bunker_commoners", chance = 5000000},
 				{group = "bounty_hunter_armor", chance = 5000000}
 			},
-			lootChance = 9000000
+			lootChance = 1000000
 		}
 	},
 	weapons = {"pirate_weapons_heavy"},
@@ -41,4 +41,4 @@ death_watch_black_sun_thug = Creature:new {
 	attacks = merge(riflemanmaster,pistoleermaster,carbineermaster,brawlermaster)
 }
 
-CreatureTemplates:addCreatureTemplate(death_watch_black_sun_thug, "death_watch_black_sun_thug")
+CreatureTemplates:addCreatureTemplate(death_watch_black_sun_guard, "death_watch_black_sun_guard")
