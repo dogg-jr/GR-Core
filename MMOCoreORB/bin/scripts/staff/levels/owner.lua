@@ -1,4 +1,4 @@
-admin = {
+owner = {
 	level = 10,
 	name = "owner",
 	tag = "GR-Owner",
