@@ -1,5 +1,5 @@
 admin = {
-	level = 15,
+	level = 16,
 	name = "owner",
 	tag = "GR-Owner",
 	skills = {
