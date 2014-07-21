@@ -187,6 +187,7 @@ includeFile("items/creature/woolamander_harrower_bone_fragments.lua")
 
 -- death_watch_bunker sub-folder
 includeFile("items/death_watch_bunker/alum_gel_packet.lua")
+includeFile("items/death_watch_bunker/alum_mineral.lua")
 includeFile("items/death_watch_bunker/art_crate.lua")
 includeFile("items/death_watch_bunker/art_lg_s1.lua")
 includeFile("items/death_watch_bunker/art_lg_s2.lua")
