@@ -33,7 +33,7 @@ black_sun_assassin = Creature:new {
 				{group = "junk", chance = 5500000},
 				{group = "pistols", chance = 750000},
 				{group = "rifles", chance = 750000},
-				{group = "carbines", chance = 750000},
+				{group = "protective_liquid_coating", chance = 750000},
 				{group = "jetpack_parts", chance = 500000},				
 				{group = "bounty_hunter_armor", chance = 700000},
 				{group = "jetpack_base", chance = 50000},
