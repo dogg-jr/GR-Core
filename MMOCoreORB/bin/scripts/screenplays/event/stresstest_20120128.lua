@@ -17,15 +17,15 @@ function stresstest_20120128:start()
 end
 
 function stresstest_20120128:spawnMobiles()
-	--local pShuttle = spawnMobile("corellia", "lambda_shuttle", 1, -147.3, 28, -4781.8, 0, 0)
-	--local shuttle = LuaCreatureObject(pShuttle)
-	--shuttle:setOptionsBitmask(256)
-	--shuttle:setPosture(PRONE)
+	local pShuttle = spawnMobile("corellia", "lambda_shuttle", 1, -147.3, 28, -4781.8, 0, 0)
+	local shuttle = LuaCreatureObject(pShuttle)
+	shuttle:setOptionsBitmask(256)
+	shuttle:setPosture(PRONE)
 	
-	--local pShuttle2 = spawnMobile("corellia", "lambda_shuttle", 1, -169.3, 28, -4781.8, 0, 0)
-	--local shuttle2 = LuaCreatureObject(pShuttle2)
-	--shuttle2:setOptionsBitmask(256)
-	--shuttle2:setPosture(PRONE)
+	local pShuttle2 = spawnMobile("corellia", "lambda_shuttle", 1, -169.3, 28, -4781.8, 0, 0)
+	local shuttle2 = LuaCreatureObject(pShuttle2)
+	shuttle2:setOptionsBitmask(256)
+	shuttle2:setPosture(PRONE)
 	
 	local pShuttle3 = spawnMobile("yavin4", "lambda_shuttle", 1, -6489.4, 84.5, -454.3, 9, 0)
 	local shuttle3 = LuaCreatureObject(pShuttle3)
@@ -44,21 +44,20 @@ function stresstest_20120128:spawnMobiles()
 end
 
 function stresstest_20120128:spawnSceneObjects()
-	--local pCollector = spawnSceneObject("corellia", "object/tangible/furniture/imperial/data_terminal_s1.iff", -149, 28, -4783 , 0, 1, 0, 0, 0)
-	--local collector = LuaSceneObject(pCollector)
-	--local col2creo = LuaCreatureObject(pCollector)
-	--col2creo:setOptionsBitmask(264)
-	--collector:setCustomObjectName("\\#ee3377Travel to the Death Watch Bunker")
-	--createObserver(OBJECTRADIALUSED, "stresstest_20120128", "teleportDWB", pCollector)
+	local pCollector = spawnSceneObject("corellia", "object/tangible/furniture/imperial/data_terminal_s1.iff", -149, 28, -4783 , 0, 1, 0, 0, 0)
+	local collector = LuaSceneObject(pCollector)
+	local colcreo = LuaCreatureObject(pCollector)
+	colcreo:setOptionsBitmask(264)
+	collector:setCustomObjectName("\\#ee3377Travel to the Death Watch Bunker")
+	createObserver(OBJECTRADIALUSED, "stresstest_20120128", "teleportDWB", pCollector)
 	
-	--local pCollector2 = spawnSceneObject("corellia", "object/tangible/furniture/imperial/data_terminal_s1.iff", -171, 28, -4783 , 0, 1, 0, 0, 0)
-	--local collector2 = LuaSceneObject(pCollector2)
-	--local col2creo = LuaCreatureObject(pCollector2)
-	--col2creo:setOptionsBitmask(264)
-	--collector2:setCustomObjectName("\\#33ee77Travel to the Geonosian Bio Lab")
-	--createObserver(OBJECTRADIALUSED, "stresstest_20120128", "teleportGEO", pCollector2)
-	
-	--Return from DWB
+	local pCollector2 = spawnSceneObject("corellia", "object/tangible/furniture/imperial/data_terminal_s1.iff", -171, 28, -4783 , 0, 1, 0, 0, 0)
+	local collector2 = LuaSceneObject(pCollector2)
+	local col2creo = LuaCreatureObject(pCollector2)
+	col2creo:setOptionsBitmask(264)
+	collector2:setCustomObjectName("\\#33ee77Travel to the Geonosian Bio Lab")
+	createObserver(OBJECTRADIALUSED, "stresstest_20120128", "teleportGEO", pCollector2)
+		--Return from DWB
 	local pCollector3 = spawnSceneObject("endor", "object/tangible/furniture/imperial/data_terminal_s1.iff", -4660.2, 12.8, 4286 , 0, 0.707107, 0, 0.707107, 0)
 	local collector3 = LuaSceneObject(pCollector3)
 	local col3creo = LuaCreatureObject(pCollector3)
@@ -89,12 +88,12 @@ function stresstest_20120128:spawnSceneObjects()
 	createObserver(OBJECTRADIALUSED, "stresstest_20120128", "teleportDWB", pCollector5)
 end
 
-function stresstest_20120128:barkShuttleLocation(pBarker)
-	if (pBarker ~= nil) then
-		spatialChat(pBarker, "\\#881100Greetings Testers!\n\nPlease proceed to the shuttles near South Coronet (-154 -4767). Double click the terminals at these locations to arrive at the focus destination. Character Builder Terminals will be available at your destination.\n\nThanks for testing!")
-		createEvent(15000, "stresstest_20120128", "barkShuttleLocation", pBarker)
-	end
-end
+--function stresstest_20120128:barkShuttleLocation(pBarker)
+	--if (pBarker ~= nil) then
+		--spatialChat(pBarker, "\\#881100Attention!\n\nPlease proceed to the shuttles near South Coronet (-154 -4767). Double click the terminals at these locations to arrive at the focus destination. Character Builder Terminals will be available at your destination.\n\nThanks for testing!")
+		--createEvent(15000, "stresstest_20120128", "barkShuttleLocation", pBarker)
+	--end
+--end
 
 function stresstest_20120128:teleportDWB(pCollector, pPlayer)
 	local player = LuaSceneObject(pPlayer)
