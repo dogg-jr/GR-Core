@@ -52,7 +52,7 @@ object_building_player_jedi_house = object_building_player_shared_jedi_house:new
 		{"private_med_battle_fatigue", 15}
 	},
 	childObjects = {
-            {templateFile = "object/tangible/terminal/terminal_player_structure.iff", x = -3.3, z = 1.0, y = 3.9-6, ox = 0, oy = 1, oz = 0, ow = 0, cellid = 1, containmentType = -1},
+            {templateFile = "object/tangible/terminal/terminal_player_structure.iff", x = 2.9, z = 0.5, y = 8.8, ox = 0, oy = 1, oz = 0, ow = 0, cellid = 1, containmentType = -1},
 	},
 	constructionMarker = "object/building/player/construction/construction_player_house_corellia_large_style_01.iff",
 	length = 5,

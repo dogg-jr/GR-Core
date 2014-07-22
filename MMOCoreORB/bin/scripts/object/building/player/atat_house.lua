@@ -52,7 +52,7 @@ object_building_player_atat_house = object_building_player_shared_atat_house:new
 		{"private_med_battle_fatigue", 15}
 	},
 	childObjects = {
-            {templateFile = "object/tangible/terminal/terminal_player_structure.iff", x = -4.8, z = 18.1, y = 1.7 -102, ox = 0, oy = 1, oz = 0, ow = 0, cellid = 1, containmentType = -1}, 
+
 	},
 	constructionMarker = "object/building/player/construction/construction_player_house_corellia_large_style_01.iff",
 	length = 5,
