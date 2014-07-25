@@ -46,8 +46,8 @@ end
 function stresstest_20120128:spawnSceneObjects()
 	local pCollector = spawnSceneObject("corellia", "object/tangible/furniture/imperial/data_terminal_s1.iff", -149, 28, -4783 , 0, 1, 0, 0, 0)
 	local collector = LuaSceneObject(pCollector)
-	local col2creo = LuaCreatureObject(pCollector)
-	col2creo:setOptionsBitmask(264)
+	local colcreo = LuaCreatureObject(pCollector)
+	colcreo:setOptionsBitmask(264)
 	collector:setCustomObjectName("\\#ee3377Travel to the Death Watch Bunker")
 	createObserver(OBJECTRADIALUSED, "stresstest_20120128", "teleportDWB", pCollector)
 	
@@ -58,7 +58,7 @@ function stresstest_20120128:spawnSceneObjects()
 	collector2:setCustomObjectName("\\#33ee77Travel to the Geonosian Bio Lab")
 	createObserver(OBJECTRADIALUSED, "stresstest_20120128", "teleportGEO", pCollector2)
 	
-	Return from DWB
+	--Return from DWB
 	local pCollector3 = spawnSceneObject("endor", "object/tangible/furniture/imperial/data_terminal_s1.iff", -4660.2, 12.8, 4286 , 0, 0.707107, 0, 0.707107, 0)
 	local collector3 = LuaSceneObject(pCollector3)
 	local col3creo = LuaCreatureObject(pCollector3)
@@ -66,13 +66,13 @@ function stresstest_20120128:spawnSceneObjects()
 	collector3:setCustomObjectName("\\#ee3377Travel to Coronet, Corellia")
 	createObserver(OBJECTRADIALUSED, "stresstest_20120128", "teleportCnet", pCollector3)
 	
-	DWB BLUEFROG
+	--DWB BLUEFROG
 	spawnSceneObject("endor", "object/tangible/terminal/terminal_character_builder.iff", -4654.5, 14.6, 4332.6, 0, 0, 0, 1, 0)
 	
-	GEO BLUEFROG
+	--GEO BLUEFROG
 	spawnSceneObject("yavin4", "object/tangible/terminal/terminal_character_builder.iff", -6479.1, 84.2, -435.3, 0, 0.4771588, 0, -0.8788171, 0)
 	
-	Return from GEO
+	--Return from GEO
 	local pCollector4 = spawnSceneObject("yavin4", "object/tangible/furniture/imperial/data_terminal_s1.iff", -6493.1, 84.2, -452.3, 0, 0.996917, 0, 0.078459, 0)
 	local collector4 = LuaSceneObject(pCollector4)
 	local col4creo = LuaCreatureObject(pCollector4)
@@ -91,7 +91,7 @@ end
 
 function stresstest_20120128:barkShuttleLocation(pBarker)
 	if (pBarker ~= nil) then
-		spatialChat(pBarker, "\\#881100Greetings Testers!\n\nPlease proceed to the shuttles near South Coronet (-154 -4767). Double click the terminals at these locations to arrive at the focus destination. Character Builder Terminals will be available at your destination.\n\nThanks for testing!")
+		spatialChat(pBarker, "\\#881100Greetings Players!\n\nTo Obtain jedi, you must recieve 30 badges and complete 1 themepark. Once complete, come see an Admin. Character Builder Terminals will be everywhere. Thanks for playing!\n\nThanks for choosing SWGGR~!")
 		createEvent(15000, "stresstest_20120128", "barkShuttleLocation", pBarker)
 	end
 end
