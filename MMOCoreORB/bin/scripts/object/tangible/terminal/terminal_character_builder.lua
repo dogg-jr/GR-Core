@@ -1538,7 +1538,7 @@ object_tangible_terminal_terminal_character_builder = object_tangible_terminal_s
 			--		"Bone Helmet", "object/tangible/wearables/armor/bone/armor_bone_s01_helmet.iff",
 			--		"Bone Leggings", "object/tangible/wearables/armor/bone/armor_bone_s01_leggings.iff"
 			--	},
---[[				"Shock Trooper",
+[[			"Shock Trooper",
 				{
 					"Assault Trooper Left Bicep", "object/tangible/wearables/armor/assault_trooper/armor_assault_trooper_bicep_l.iff",
 					"Assault Trooper Right Bicep", "object/tangible/wearables/armor/assault_trooper/armor_assault_trooper_bicep_r.iff",
@@ -1589,7 +1589,7 @@ object_tangible_terminal_terminal_character_builder = object_tangible_terminal_s
 					"Clone Trooper Gloves", "object/tangible/wearables/armor/clone_trooper/armor_clone_trooper_rebel_s01_gloves.iff",
 					"Clone Trooper Helmet", "object/tangible/wearables/armor/clone_trooper/armor_clone_trooper_rebel_s01_helmet.iff",
 					"Clone Trooper Leggings", "object/tangible/wearables/armor/clone_trooper/armor_clone_trooper_rebel_s01_leggings.iff"
-				},]]				
+				},			
 				"Ithorian Armor",
 				{
 					"Ithorian Sentinel",
